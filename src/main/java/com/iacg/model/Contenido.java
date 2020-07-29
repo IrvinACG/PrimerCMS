@@ -5,6 +5,9 @@ public class Contenido {
 	private String Tipo;
 	private String Contenido;
 	private long IdPost;
+	
+	public Contenido() {}
+	
 	public Contenido(long idContenido, String tipo, String contenido, long idPost) {
 		IdContenido = idContenido;
 		Tipo = tipo;

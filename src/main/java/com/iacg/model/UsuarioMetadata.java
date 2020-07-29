@@ -6,6 +6,9 @@ public class UsuarioMetadata {
 	private String Clave;
 	private String Valor;
 	private String Tipo;
+	
+	public UsuarioMetadata() {}
+	
 	public UsuarioMetadata(long idUsuarioMetadata, long idUsuario, String clave, String valor, String tipo) {
 		IdUsuarioMetadata = idUsuarioMetadata;
 		IdUsuario = idUsuario;

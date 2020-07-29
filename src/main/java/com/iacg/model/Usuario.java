@@ -8,6 +8,8 @@ public class Usuario {
 	private String Correo;
 	private long IdGrupo;
 	
+	public Usuario() {}
+	
 	public Usuario(long idUsuario, String nombre, String apellido, String contrasenia, String correo, long idGrupo) {
 		IdUsuario = idUsuario;
 		Nombre = nombre;

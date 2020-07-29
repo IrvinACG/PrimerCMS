@@ -16,8 +16,13 @@ public class UsuarioMetadataRepository implements UsuarioMetadataRep {
 
 	@Override
 	public boolean save(UsuarioMetadata object) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			
+			return true;
+		}catch(Exception e) {
+			return false;
+		}
+		
 	}
 
 	@Override

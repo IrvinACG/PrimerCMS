@@ -3,6 +3,9 @@ package com.iacg.model;
 public class Grupo {
 	private long IdGrupo;
 	private String Nombre;
+	
+	public Grupo() {}
+	
 	public Grupo(long idGrupo, String nombre) {
 		IdGrupo = idGrupo;
 		Nombre = nombre;

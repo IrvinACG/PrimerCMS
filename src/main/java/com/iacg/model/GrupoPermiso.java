@@ -3,6 +3,9 @@ package com.iacg.model;
 public class GrupoPermiso {
 	private long IdGrupo;
 	private long IdPermiso;
+	
+	public GrupoPermiso() {}
+	
 	public GrupoPermiso(long idGrupo, long idPermiso) {
 		IdGrupo = idGrupo;
 		IdPermiso = idPermiso;

@@ -10,6 +10,9 @@ public class Post {
 	private long Categoria;
 	private String ImagenDestacada;
 	private String Tipo;
+	
+	public Post() {}
+	
 	public Post(long idPost, String titulo, String slug, String extracto, long idUsuario, long categoria,
 			String imagenDestacada, String tipo) {
 		IdPost = idPost;

@@ -10,6 +10,8 @@ public class Comentario {
 	private Date Fecha;
 	private String Respuesta;
 	
+	public Comentario() {}
+	
 	public Comentario(long idComentario, String comentario, long idPost, long idUsuario, Date fecha, String respuesta) {
 		IdComentario = idComentario;
 		Comentario = comentario;

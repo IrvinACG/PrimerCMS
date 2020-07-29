@@ -6,6 +6,9 @@ public class PostMetadata {
 	private String Valor;
 	private String Tipo;
 	private long IdPost;
+	
+	public PostMetadata() {}
+	
 	public PostMetadata(long idPostMetadata, String clave, String valor, String tipo, long idPost) {
 		IdPostMetadata = idPostMetadata;
 		Clave = clave;

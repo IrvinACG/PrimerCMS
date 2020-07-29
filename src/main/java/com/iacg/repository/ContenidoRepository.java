@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.iacg.mappers.ContenidoMapper;
 import com.iacg.model.Contenido;
 
 @Repository
@@ -29,9 +30,9 @@ public class ContenidoRepository implements ContenidoRep{
 	@Override
 	public boolean update(Contenido object) {
 		if(object.getIdContenido()!=0) {
-			String sql = String.format("UPDATE contenido SET Tipo='%s', Contenido='%s', IdPost='%d' "
+			String sql = String.format("UPDATE contenido SET Tipo='%s', Contenido='%s' "
 					+ "WHERE IdContenido='%d'",
-					object.getTipo(),object.getContenido(),object.getIdPost(),
+					object.getTipo(),object.getContenido(),
 					object.getIdContenido());
 			jdbcTemplate.execute(sql);
 			return true;
@@ -40,14 +41,13 @@ public class ContenidoRepository implements ContenidoRep{
 	}
 
 	@Override
-	public List<Contenido> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Contenido> findAll(Pageable pageable) {		
+		return jdbcTemplate.query("SELEC * FROM contenido", new ContenidoMapper());
 	}
 
 	@Override
 	public Contenido findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Object params[] = {id};
+		return jdbcTemplate.queryForObject("SELECT * FROM contenido WHERE IdContenido=?",params, new ContenidoMapper());
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.iacg.mappers.GrupoPermisoMapper;
 import com.iacg.model.GrupoPermiso;
 
 @Repository
@@ -33,14 +34,13 @@ public class GrupoPermisoRepository implements GrupoPermisoRep{
 	}
 
 	@Override
-	public List<GrupoPermiso> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<GrupoPermiso> findAll(Pageable pageable) {		
+		return jdbcTemplate.query("SELEC * FROM grupo_permiso", new GrupoPermisoMapper());
 	}
 
 	@Override
 	public GrupoPermiso findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Object params[] = {id};
+		return jdbcTemplate.queryForObject("SELECT * FROM grupo_permiso WHERE IdCategoria=?",params, new GrupoPermisoMapper());
 	}
 }

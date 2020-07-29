@@ -9,7 +9,7 @@ public class Categoria {
 	private Date Fecha;
 	private long CategoriaSuperior;
 	
-	
+	public Categoria() {}
 	
 	public Categoria(int idCategoria, String nombre, String descripcion, Date fecha, long categoriaSuperior) {
 		IdCategoria = idCategoria;

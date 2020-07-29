@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.iacg.mappers.PermisoMapper;
 import com.iacg.model.Permiso;
 
 @Repository
@@ -33,14 +34,13 @@ public class PermisoRepository implements PermisoRep {
 	}
 
 	@Override
-	public List<Permiso> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Permiso> findAll(Pageable pageable) {		
+		return jdbcTemplate.query("SELEC * FROM permisos", new PermisoMapper());
 	}
 
 	@Override
 	public Permiso findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Object params[] = {id};
+		return jdbcTemplate.queryForObject("SELECT * FROM permisos WHERE IdCategoria=?",params, new PermisoMapper());
 	}
 }

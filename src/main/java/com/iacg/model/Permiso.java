@@ -3,6 +3,9 @@ package com.iacg.model;
 public class Permiso {
 	private long IdPermiso;
 	private String Nombre;
+	
+	public Permiso() {}
+	
 	public Permiso(long idPermiso, String nombre) {
 		IdPermiso = idPermiso;
 		Nombre = nombre;

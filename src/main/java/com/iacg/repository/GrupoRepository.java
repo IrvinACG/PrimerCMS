@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+
+import com.iacg.mappers.GrupoMapper;
 import com.iacg.model.Grupo;
 
 @Repository
@@ -39,15 +41,14 @@ public class GrupoRepository implements GrupoRep{
 	}
 
 	@Override
-	public List<Grupo> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Grupo> findAll(Pageable pageable) {		
+		return jdbcTemplate.query("SELEC * FROM grupos", new GrupoMapper());
 	}
 
 	@Override
 	public Grupo findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Object params[] = {id};
+		return jdbcTemplate.queryForObject("SELECT * FROM grupos WHERE IdGrupo=?",params, new GrupoMapper());
 	}
 
 }

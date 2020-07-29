@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.iacg.mappers.ComentarioMapper;
 import com.iacg.model.Comentario;
 
 @Repository
@@ -42,14 +43,13 @@ public class ComentarioRepository implements ComentarioRep {
 	}
 
 	@Override
-	public List<Comentario> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Comentario> findAll(Pageable pageable) {		
+		return jdbcTemplate.query("SELEC * FROM comentario", new ComentarioMapper());
 	}
 
 	@Override
 	public Comentario findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Object params[] = {id};
+		return jdbcTemplate.queryForObject("SELECT * FROM comentario WHERE IdComentario=?",params, new ComentarioMapper());
 	}
 }
