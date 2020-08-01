@@ -2,6 +2,11 @@ package com.iacg.repository;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,8 +17,15 @@ import com.iacg.model.Usuario;
 
 @Repository
 public class UsuarioRepository implements UsuarioRep{
+	private Log log = LogFactory.getLog(getClass());
 	@Autowired
+	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
+	
+	@PostConstruct
+	public void postConstruc() {
+		jdbcTemplate =  new JdbcTemplate(dataSource);
+	}
 
 	@Override
 	public boolean save(Usuario object) {
@@ -23,6 +35,7 @@ public class UsuarioRepository implements UsuarioRep{
 			jdbcTemplate.execute(sql);
 			return true;
 		}catch(Exception e) {
+			log.error(e.getMessage());
 			return false;
 		}
 	}
@@ -42,7 +55,7 @@ public class UsuarioRepository implements UsuarioRep{
 
 	@Override
 	public List<Usuario> findAll(Pageable pageable) {
-		return jdbcTemplate.query("SELEC * FROM usuarios", new UsuarioMapper());
+		return jdbcTemplate.query("SELECT * FROM usuarios", new UsuarioMapper());
 	}
 
 	@Override
@@ -50,4 +63,13 @@ public class UsuarioRepository implements UsuarioRep{
 		Object params[] = {id};
 		return jdbcTemplate.queryForObject("SELECT * FROM usuarios WHERE IdUsuario=?",params, new UsuarioMapper());
 	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
 }

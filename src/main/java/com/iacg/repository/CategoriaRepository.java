@@ -3,6 +3,11 @@ package com.iacg.repository;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +16,18 @@ import org.springframework.stereotype.Repository;
 import com.iacg.mappers.CategoriaMapper;
 import com.iacg.model.Categoria;
 
-@Repository
+//@Repository
 public class CategoriaRepository implements CategoriaRep{
-	
+	private Log log = LogFactory.getLog(getClass());
 	@Autowired
+	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
-
+	
+	@PostConstruct
+	public void postConstruc() {
+		jdbcTemplate =  new JdbcTemplate(dataSource);
+	}
+	
 	@Override
 	public boolean save(Categoria categoria) {
 		try {
@@ -26,6 +37,7 @@ public class CategoriaRepository implements CategoriaRep{
 			jdbcTemplate.execute(sql);
 			return true;
 		}catch(Exception e) {
+			log.error(e.getMessage());
 			return false;
 		}		
 	}
@@ -44,7 +56,7 @@ public class CategoriaRepository implements CategoriaRep{
 
 	@Override
 	public List<Categoria> findAll(Pageable pageable) {		
-		return jdbcTemplate.query("SELEC * FROM categoria", new CategoriaMapper());
+		return jdbcTemplate.query("SELECT * FROM categoria", new CategoriaMapper());
 	}
 
 	@Override
@@ -52,4 +64,15 @@ public class CategoriaRepository implements CategoriaRep{
 		Object params[] = {id};
 		return jdbcTemplate.queryForObject("SELECT * FROM categoria WHERE IdCategoria=?",params, new CategoriaMapper());
 	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
+	
+	
 }

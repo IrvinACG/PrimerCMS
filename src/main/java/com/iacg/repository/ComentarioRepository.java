@@ -2,6 +2,11 @@ package com.iacg.repository;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,18 +17,26 @@ import com.iacg.model.Comentario;
 
 @Repository
 public class ComentarioRepository implements ComentarioRep {
+	private Log log = LogFactory.getLog(getClass());
 	@Autowired
+	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
+	
+	@PostConstruct
+	public void postConstruc() {
+		jdbcTemplate =  new JdbcTemplate(dataSource);
+	}
 
 	@Override
 	public boolean save(Comentario object) {
 		try {
 			String sql = String.format("INSERT INTO comentario (Comentario,IdUsuario,IdPost,Respuesta) "
-					+ "VALUES ('%s','%d','%d','%s')",
+					+ "VALUES ('%s','%d','%d','%d')",
 					object.getComentario(),object.getIdUsuario(),object.getIdPost(),object.getRespuesta());
 			jdbcTemplate.execute(sql);
 			return true;
 		}catch(Exception e) {
+			log.error(e.getMessage());
 			return false;
 		}
 		
@@ -32,7 +45,7 @@ public class ComentarioRepository implements ComentarioRep {
 	@Override
 	public boolean update(Comentario object) {
 		if(object.getIdComentario()!=0) {
-			String sql = String.format("UPDATE comentario SET Comentario='%s', IdUsuario='%d', IdPost='%d', Respuesta='%s' "
+			String sql = String.format("UPDATE comentario SET Comentario='%s', IdUsuario='%d', IdPost='%d', Respuesta='%d' "
 					+ "WHERE IdComentario='%d'",
 					object.getComentario(),object.getIdUsuario(),object.getIdPost(),object.getRespuesta(),
 					object.getIdComentario());
@@ -44,7 +57,7 @@ public class ComentarioRepository implements ComentarioRep {
 
 	@Override
 	public List<Comentario> findAll(Pageable pageable) {		
-		return jdbcTemplate.query("SELEC * FROM comentario", new ComentarioMapper());
+		return jdbcTemplate.query("SELECT * FROM comentario", new ComentarioMapper());
 	}
 
 	@Override
@@ -52,4 +65,14 @@ public class ComentarioRepository implements ComentarioRep {
 		Object params[] = {id};
 		return jdbcTemplate.queryForObject("SELECT * FROM comentario WHERE IdComentario=?",params, new ComentarioMapper());
 	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
+	
 }

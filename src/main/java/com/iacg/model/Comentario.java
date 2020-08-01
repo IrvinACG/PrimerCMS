@@ -8,11 +8,11 @@ public class Comentario {
 	private long IdPost;
 	private long IdUsuario;
 	private Date Fecha;
-	private String Respuesta;
+	private long Respuesta;
 	
 	public Comentario() {}
 	
-	public Comentario(long idComentario, String comentario, long idPost, long idUsuario, Date fecha, String respuesta) {
+	public Comentario(long idComentario, String comentario, long idPost, long idUsuario, Date fecha, long respuesta) {
 		IdComentario = idComentario;
 		Comentario = comentario;
 		IdPost = idPost;
@@ -50,10 +50,10 @@ public class Comentario {
 	public void setFecha(Date fecha) {
 		Fecha = fecha;
 	}
-	public String getRespuesta() {
+	public long getRespuesta() {
 		return Respuesta;
 	}
-	public void setRespuesta(String respuesta) {
+	public void setRespuesta(long respuesta) {
 		Respuesta = respuesta;
 	}
 	

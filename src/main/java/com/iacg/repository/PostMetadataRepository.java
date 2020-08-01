@@ -2,6 +2,11 @@ package com.iacg.repository;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,17 +17,25 @@ import com.iacg.model.PostMetadata;
 
 @Repository
 public class PostMetadataRepository implements PostMetadataRep {
+	private Log log = LogFactory.getLog(getClass());
 	@Autowired
+	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
+	
+	@PostConstruct
+	public void postConstruc() {
+		jdbcTemplate =  new JdbcTemplate(dataSource);
+	}
 
 	@Override
 	public boolean save(PostMetadata object) {
 		try {
 			String sql = String.format("INSERT INTO post_metadata (Clave,Valor,Tipo,IdPost) VALUES ('%s','%s','%s','%d')", 
-					object.getClave(),object.getValor(),object.getIdPost());
+					object.getClave(),object.getValor(),object.getTipo(),object.getIdPost());
 			jdbcTemplate.execute(sql);
 			return true;
 		}catch(Exception e) {
+			log.error(e.getMessage());
 			return false;
 		}
 	}
@@ -42,7 +55,7 @@ public class PostMetadataRepository implements PostMetadataRep {
 
 	@Override
 	public List<PostMetadata> findAll(Pageable pageable) {		
-		return jdbcTemplate.query("SELEC * FROM post_metadata", new PostMetadataMapper());
+		return jdbcTemplate.query("SELECT * FROM post_metadata", new PostMetadataMapper());
 	}
 
 	@Override
@@ -50,4 +63,13 @@ public class PostMetadataRepository implements PostMetadataRep {
 		Object params[] = {id};
 		return jdbcTemplate.queryForObject("SELECT * FROM post_metadata WHERE IdPostMetadata=?",params, new PostMetadataMapper());
 	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
 }

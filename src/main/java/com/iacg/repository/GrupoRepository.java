@@ -2,6 +2,11 @@ package com.iacg.repository;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,9 +19,15 @@ import com.iacg.model.Grupo;
 @Repository
 public class GrupoRepository implements GrupoRep{
 	
+	private Log log = LogFactory.getLog(getClass());
 	@Autowired
+	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
-
+	
+	@PostConstruct
+	public void postConstruc() {
+		jdbcTemplate =  new JdbcTemplate(dataSource);
+	}
 	@Override
 	public boolean save(Grupo object) {
 		try {
@@ -25,6 +36,7 @@ public class GrupoRepository implements GrupoRep{
 			jdbcTemplate.execute(sql);
 			return true;
 		}catch(Exception e) {
+			log.error(e.getMessage());
 			return false;
 		}
 	}
@@ -42,7 +54,7 @@ public class GrupoRepository implements GrupoRep{
 
 	@Override
 	public List<Grupo> findAll(Pageable pageable) {		
-		return jdbcTemplate.query("SELEC * FROM grupos", new GrupoMapper());
+		return jdbcTemplate.query("SELECT * FROM grupos", new GrupoMapper());
 	}
 
 	@Override
@@ -50,5 +62,13 @@ public class GrupoRepository implements GrupoRep{
 		Object params[] = {id};
 		return jdbcTemplate.queryForObject("SELECT * FROM grupos WHERE IdGrupo=?",params, new GrupoMapper());
 	}
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
+	
 
 }

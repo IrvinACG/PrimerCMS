@@ -2,6 +2,11 @@ package com.iacg.repository;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,8 +17,15 @@ import com.iacg.model.Post;
 
 @Repository
 public class PostRepository implements PostRep {
+	private Log log = LogFactory.getLog(getClass());
 	@Autowired
+	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
+	
+	@PostConstruct
+	public void postConstruc() {
+		jdbcTemplate =  new JdbcTemplate(dataSource);
+	}
 
 	@Override
 	public boolean save(Post object) {
@@ -25,6 +37,7 @@ public class PostRepository implements PostRep {
 			jdbcTemplate.execute(sql);
 			return true;
 		}catch(Exception e) {
+			log.error(e.getMessage());
 			return false;
 		}
 	}
@@ -46,7 +59,7 @@ public class PostRepository implements PostRep {
 
 	@Override
 	public List<Post> findAll(Pageable pageable) {		
-		return jdbcTemplate.query("SELEC * FROM post", new PostMapper());
+		return jdbcTemplate.query("SELECT * FROM post", new PostMapper());
 	}
 
 	@Override
@@ -54,4 +67,13 @@ public class PostRepository implements PostRep {
 		Object params[] = {id};
 		return jdbcTemplate.queryForObject("SELECT * FROM post WHERE IdPost=?",params, new PostMapper());
 	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
 }
